@@ -1,5 +1,6 @@
-from midiutil.MidiFile import MIDIFile
 import os
+
+from midiutil.MidiFile import MIDIFile
 
 
 class midinotes:
@@ -11,10 +12,7 @@ class midinotes:
         self.track = 0
         self.midi_file_format = int(midi_file_format)
         print("initialize midifile...")
-        self.mf = MIDIFile(1, file_format=self.midi_file_format,
-                           removeDuplicates=True,
-                           deinterleave=False,
-                           adjust_origin=False)
+        self.mf = MIDIFile(1, file_format=self.midi_file_format, deinterleave=False)
         print("initialize midifile done.")
 
     def addNote(self, track, channel, note, start_time, duration, volume):

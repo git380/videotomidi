@@ -1,9 +1,8 @@
-import pygame
 import sys
 import time
-from OpenGL.GL import *
 
-from .prefs import prefs
+import pygame
+from OpenGL.GL import *
 
 Label_v_spacer = 21
 fontSize = 24
@@ -53,7 +52,6 @@ def DrawQuad(vx, vy, vx2, vy2, ):
         glScalef(vx2 - vx, vy2 - vy, 1)
         glCallList(Gl.listQuad1)
         glPopMatrix()
-    #
     pass
 
 
@@ -95,7 +93,6 @@ def DrawRect(vx, vy, vx2, vy2, w=1):
         glScalef(vx2 - vx, vy2 - vy, 1)
         glCallList(Gl.listRect1)
         glPopMatrix()
-    #
     pass
 
 
@@ -687,7 +684,6 @@ class GLWindow:
         self.clientrect[1] = self.y + self.borderwidth + self.titleheight
         self.clientrect[2] = self.x + self.w - self.borderwidth
         self.clientrect[3] = self.y + self.h - self.titleheight - self.borderwidth
-
 
     def appendChild(self, child):
         self.child.append(child)

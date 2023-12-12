@@ -38,13 +38,12 @@ settingsfile = filepath + ".ini"
 import video2midi.settings as settings
 from video2midi.gl import *
 from video2midi.midi import *
+from video2midi.prefs import prefs
 import datetime
 
 
 mpos = [0, 0]
 
-keygrab = 0
-keygrabid = -1
 lastkeygrabid = -1
 
 #
@@ -150,7 +149,6 @@ getFrame()
 print("video " + str(width) + "x" + str(height) + " fps: " + str(fps))
 
 # add some notes
-channel = 0
 volume = 100
 basenote = prefs.octave * 12
 

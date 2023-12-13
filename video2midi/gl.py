@@ -249,7 +249,7 @@ def GenFontTexture():
         x += ix + 2
         if (i % 32 == 31) and (i != 0): x = 2
 
-    tex_data = pygame.image.tostring(texture_buffer_surf, "RGBA", 1)
+    tex_data = pygame.image.tostring(texture_buffer_surf, 'RGBA', 1)
 
     # fix alpha ...
     l = list(tex_data)
@@ -283,7 +283,7 @@ def drawText(position, color, textString, size=24):
         glBlendFunc(GL_ONE, GL_SRC_ALPHA)
         font = pygame.font.Font(None, size)
         textSurface = font.render(textString, True, (color[0], color[1], color[2], 255), (0, 0, 0, 0))
-        textData = pygame.image.tostring(textSurface, "RGBA", True)
+        textData = pygame.image.tostring(textSurface, 'RGBA', True)
         glRasterPos3d(*position)
         glDrawPixels(textSurface.get_width(), textSurface.get_height(), GL_RGBA, GL_UNSIGNED_BYTE, textData)
     pass
@@ -312,7 +312,7 @@ def drawHint(x: float, y: float, hint: str, middle: bool = False):
 
 
 class GLSlider:
-    def __init__(self, x, y, w, h, vmin, vmax, value, update_func=None, label="", color=[128, 128, 255]):
+    def __init__(self, x, y, w, h, vmin, vmax, value, update_func=None, label='', color=[128, 128, 255]):
         self.w = float(w)
         self.h = float(h)
         self.x = float(x)
@@ -330,7 +330,7 @@ class GLSlider:
         self.mouseclickpos = [0, 0]
         self.showvalue = False
         self.label = label
-        self.showlabel = label != ""
+        self.showlabel = label != ''
         self.showvaluesinlabel = 1
         self.round = 2
         self.color = color
@@ -363,7 +363,7 @@ class GLSlider:
                     value = str(int(self.value))
                 else:
                     value = str(self.value)
-                labeltext = labeltext + ": " + value
+                labeltext = labeltext + ': ' + value
             glPushMatrix()
             drawText((0, 0, 1), (255, 255, 255), labeltext)
             glPopMatrix()
@@ -503,7 +503,7 @@ class GLColorButton:
 
 
 class GLButton:
-    def __init__(self, x, y, w, h, index, color=[128, 128, 128], text="", procedure=None, upcolor=[128, 128, 128], downcolor=[80, 80, 80], switch=0, switch_status=0, switch_on=[128, 128, 255], switch_off=[128, 128, 128], hint=""):
+    def __init__(self, x, y, w, h, index, color=[128, 128, 128], text='', procedure=None, upcolor=[128, 128, 128], downcolor=[80, 80, 80], switch=0, switch_status=0, switch_on=[128, 128, 255], switch_off=[128, 128, 128], hint=''):
         self.w = float(w)
         self.h = float(h)
         self.x = float(x)
@@ -582,7 +582,7 @@ class GLButton:
                 t1 = time.time()
                 self.mouse_over_time = t1 - self.old_time
         else:
-            if self.hint != "":
+            if self.hint != '':
                 self.old_time = time.time()
                 self.mouse_over_time = 0
 

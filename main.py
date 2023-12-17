@@ -644,9 +644,7 @@ wh = ((len(prefs.keyp_colors) // 2) + 2) * 24 - 24
 colorWindow = GLWindow(24, 50, 274, wh, 'color map')
 settingsWindow = GLWindow(24 + 275, 80, 550, 340, 'Settings')
 helpWindow = GLWindow(24 + 270, 50, 750, 490, 'help')
-
 extraWindow = GLWindow(24 + 270 + 550 + 6, 80, 510, 250, 'extra/experimental')
-
 sparksWindow = GLWindow(24 + 270 + 550 + 6, 300, 510, 185, 'sparks & color settings')
 
 glwindows = []
@@ -658,10 +656,10 @@ glwindows.append(ShowHideButton)
 glwindows.append(colorWindow)
 glwindows.append(settingsWindow)
 glwindows.append(helpWindow)
-
 glwindows.append(extraWindow)
 glwindows.append(sparksWindow)
 
+# help
 helpWindow.hidden = 1
 helpWindow_label1 = GLLabel(0, 0, '''h - on window title, show/hide the window
 q - begin to recreate midi
@@ -685,7 +683,7 @@ F2 / F3 - save / load settings, F4 - move all windows to the mouse point
 Escape - quit, TAB - Show/Hide all windows
 Space - abort re-creation and save midi file to disk''')
 
-
+# Settings
 settingsWindow.appendChild(GLButton(260, 20, 140, 20, 0, [128, 128, 128], 'start recreate midi', start_recreate_midi, hint='q - hot key'))
 settingsWindow.appendChild(GLButton(260, 40, 140, 20, 0, [128, 128, 128], 'set start frame', set_start_frame_to_current_frame, hint='s - hot key, (mods : shift + s, set processing start frame to the beginning)'))
 settingsWindow.appendChild(GLButton(260 + 141, 40, 140, 20, 0, [128, 128, 128], 'set end frame', sef_end_frame_to_current_frame, hint='e - hot key, (mods : shift + e, set processing end frame to the ending)'))
@@ -755,6 +753,7 @@ settingsWindow.appendChild(GLButton(260 + 141, 160, 140, 20, 1, [128, 128, 128],
 settingsWindow_rollcheck_priority_button = GLButton(260, 180, 222, 22, 1, [128, 128, 128], 'rollcheck white keys priority', change_rollcheck_priority, switch=1, switch_status=prefs.rollcheck_priority)
 settingsWindow.appendChild(settingsWindow_rollcheck_priority_button)
 
+# color map
 print('creating new colors ' + str(len(prefs.keyp_colors)))
 
 sparks_slider_delta = GLSlider(6, 25, 150, 18, -50, 150, 50, update_sparks_delta, label='Sparks delta')
@@ -774,6 +773,7 @@ for i in range(len(prefs.keyp_colors)):
 for i in colorWindow_colorBtns_channel_btns:
     colorWindow.appendChild(i)
 
+# extra/experimental
 extraWindow.appendChild(GLButton(5, 20, 128, 25, 1, [128, 128, 128], 'read colors', readcolors))
 extraWindow.appendChild(GLButton(135, 20, 128, 25, 1, [128, 128, 128], 'update color', updatecolor))
 extraWindow.appendChild(GLButton(265, 20, 138, 25, 1, [128, 128, 128], 'enable/disable', change_use_alternate_keys))
@@ -793,20 +793,28 @@ extraWindow_slider2 = GLSlider(5, 155, 240, 18, 0, 2000, line_height, update_lin
 extraWindow_slider2.round = 0
 extraWindow.appendChild(extraWindow_slider2)
 
+# 'sparks & color settings
+# スパークの高さに関するスライダーの設定
 sparks_slider_height = GLSlider(160, 25, 150, 18, 1, 60, 1, None, label='Sparks height')
 sparks_slider_height.round = 0
+# スパークの使用に関するスイッチボタンの設定
 sparks_switch = GLButton(313, 24, 100, 22, 1, [128, 128, 128], 'use sparks', change_use_sparks, switch=1, switch_status=prefs.use_sparks)
+# スパーク関連のUI要素をウィンドウに追加
 sparksWindow.appendChild(sparks_slider_delta)
 sparksWindow.appendChild(sparks_slider_height)
 sparksWindow.appendChild(sparks_switch)
 #
 sparksWindow.appendChild(GLButton(413, 24, 32, 22, 1, [96, 96, 128], 'y+', update_sparks_y_pos, hint='move sparks higher'))
 sparksWindow.appendChild(GLButton(413 + 33, 24, 32, 22, 1, [96, 96, 128], 'y-', update_sparks_y_pos, hint='move sparks lower'))
+# スパークの位置調整に関するラベル
 sparksWindow.appendChild(GLLabel(6, 50, 'alt + up / down - move sparks label up or down '))
 
+# 特定色の感度に関するスライダーの設定
 selected_color_delta = GLSlider(6, 100, 200, 18, 0, 130, 50, update_percolor_delta, label='percolor sensitivity')
 selected_color_delta.round = 1
+# 特定色の感度使用に関するスイッチボタンの設定
 use_percolor_delta = GLButton(313, 100, 190, 22, 1, [128, 128, 128], 'use percolor sensitivity', change_use_percolor_delta, switch=1, switch_status=prefs.use_sparks)
+# 特定色の感度関連のUI要素をウィンドウに追加
 sparksWindow.appendChild(selected_color_delta)
 sparksWindow.appendChild(use_percolor_delta)
 #

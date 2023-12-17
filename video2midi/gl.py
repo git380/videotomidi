@@ -6,7 +6,6 @@ from OpenGL.GL import *
 
 Label_v_spacer = 21
 fontSize = 24
-fontChars = u''' !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz><'''
 
 
 class Gl:
@@ -20,7 +19,7 @@ class Gl:
 
 def doinitGl():
     Gl.listQuad1 = -1
-    for fnt in fonts:
+    for fnt in fonts.values():
         fnt.gllistid = -1
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
     Gl.bgImgGL = glGenTextures(1)
@@ -148,14 +147,14 @@ class GLFont:
         pass
 
 
-fonts = []
+fonts = {}
 
 
 def getTextSize(text):
     sizes = [0, 0]
     for i in text:
-        fid = int(ord(i)) - 32
-        if fid < 0 or fid >= len(fonts): continue
+        fid = int(ord(i))
+        if fid not in fonts: continue
         j = fonts[fid]
         if j.fh > sizes[1]:
             sizes[1] = j.fh
@@ -164,8 +163,6 @@ def getTextSize(text):
 
 
 def RenderText(x, y, text):
-    global fontChars
-    global fonts
     glPushAttrib(GL_ENABLE_BIT)
 
     glDisable(GL_DEPTH_TEST)
@@ -186,8 +183,8 @@ def RenderText(x, y, text):
     glTranslatef(x, y - 21, 0)
     glColor4f(1.0, 1.0, 1.0, 1.0)
     for i in text:
-        fid = int(ord(i)) - 32
-        if fid < 0 or fid >= len(fonts): continue
+        fid = int(ord(i))
+        if fid not in fonts: continue
         j = fonts[fid]
         if i == ' ':
             glTranslatef(j.fw, 0, 0)
@@ -222,32 +219,39 @@ def RenderText(x, y, text):
 
 
 def GenFontTexture():
-    global fontChars
     global fonts
     global fontSize
 
-    # surface
+    # サーフェイスの作成
     texture_buffer_surf = pygame.Surface((512, 512))
     texture_buffer_surf.fill(pygame.Color('black'))
+
+    # フォントの選択
     if sys.platform.startswith('win'):
         font = pygame.font.SysFont('Arial', fontSize - 10)
     else:
         font = pygame.font.Font(None, fontSize)
 
-    x = 2
-    for i in range(len(fontChars)):
-        y = i // 32
-        #
-        textSurface = font.render(fontChars[i], True, (255, 255, 255, 255))
-        #
+    x, y = 2, 0  # 初期の水平位置と垂直位置
+    # ASCII文字コード(Unicode)の範囲
+    for char_code in range(32, 126 + 1):
+        # 文字コードを文字に変換
+        char = chr(char_code)
+        # テキストサーフェイスの作成
+        textSurface = font.render(char, True, (255, 255, 255, 255))
+        # サーフェイスサイズの取得
         ix, iy = textSurface.get_width(), textSurface.get_height()
+        # テキストをサーフェイスに描画
         texture_buffer_surf.blit(textSurface, (x, y * fontSize, 0, 0))
-        fnt = GLFont(x / 512.0, 1 - (y * fontSize - 2) / 512.0, (x + ix) / 512.0, 1 - (y * fontSize + fontSize - 2) / 512.0, ix, fontSize, fontChars[i])
+        # GLFontオブジェクトの作成
+        fnt = GLFont(x / 512.0, 1 - (y * fontSize - 2) / 512.0, (x + ix) / 512.0, 1 - (y * fontSize + fontSize - 2) / 512.0, ix, fontSize, char)
 
-        fonts.append(fnt)
+        fonts[char_code] = fnt  # リストに追加
 
-        x += ix + 2
-        if (i % 32 == 31) and (i != 0): x = 2
+        x += ix + 2  # 次の文字のための水平位置の更新
+        if x + ix > 512:  # サーフェイスの幅を超えた場合
+            x = 2  # 水平位置をリセット
+            y += 1  # 垂直位置を1行分下げる
 
     tex_data = pygame.image.tostring(texture_buffer_surf, 'RGBA', 1)
 

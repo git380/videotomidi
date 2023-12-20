@@ -46,6 +46,7 @@ import video2midi.settings as settings
 from video2midi.gl import *
 from video2midi.midi import *
 from video2midi.prefs import prefs
+from main_package.strings_display_ja import *
 import datetime
 
 # マウス座標を取得する変数
@@ -421,7 +422,7 @@ def change_use_alternate_keys(sender):
 
 
 def update_alternate_label():
-    extra_label1.text = 'Use alternate:' + str(prefs.use_alternate_keys)
+    extra_label1.text = use_alternate_label + str(prefs.use_alternate_keys)
 
 
 def change_use_sparks(sender):
@@ -641,11 +642,11 @@ def rotate_ccw(sender):
 
 #
 wh = ((len(prefs.keyp_colors) // 2) + 2) * 24 - 24
-colorWindow = GLWindow(24, 50, 274, wh, 'color map')
-settingsWindow = GLWindow(24 + 275, 80, 550, 340, 'Settings')
-helpWindow = GLWindow(24 + 270, 50, 750, 490, 'help')
-extraWindow = GLWindow(24 + 270 + 550 + 6, 80, 510, 250, 'extra/experimental')
-sparksWindow = GLWindow(24 + 270 + 550 + 6, 300, 510, 185, 'sparks & color settings')
+colorWindow = GLWindow(24, 50, 274, wh, color_window_title)
+settingsWindow = GLWindow(24 + 275, 80, 550, 340, settings_window_title)
+helpWindow = GLWindow(24 + 270, 50, 750, 490, help_window_title)
+extraWindow = GLWindow(24 + 270 + 550 + 6, 80, 510, 250, extra_window_title)
+sparksWindow = GLWindow(24 + 270 + 550 + 6, 300, 510, 185, sparks_window_title)
 
 glwindows = []
 ShowHideButton = GLButton(0, 0, 13, 13, 1, [128, 128, 128], '', showOrhideallwindows, switch=1, switch_status=0)
@@ -661,102 +662,82 @@ glwindows.append(sparksWindow)
 
 # help
 helpWindow.hidden = 1
-helpWindow_label1 = GLLabel(0, 0, '''h - on window title, show/hide the window
-q - begin to recreate midi
-s - set start frame, (mods : shift, set processing start frame to the beginning)
-e - set end frame, (mods : shift, set processing end frame to the ending)
-p - if key is set, force separate to 2 channels (on single color video)
-o - enable or disable overlap notes
-i - enable or disable ignore/lengthening of notes with minimal duration
-r - enable or disable resize function
-Mouse wheel - keys adjustment
-Left mouse button - dragging the selected key / select color from the color map
-CTRL + Left mouse button - update selected color in the color map
-CTRL + 0 - disable selected color in the color map
-Right mouse button - dragging all keys, if the key is selected, the transfer is carried out relative to it.
-Arrows - keys adjustment (mods : shift) ( Atl+Arrows UP/Down - sparks position adjustment )
-+(PLUS) / - (MINUS) - rotate keys by 5*
-PageUp/PageDown - scrolling video (mods : shift)
-Home/End - go to the beginning or end of the video
-[ / ] - change base octave
-F2 / F3 - save / load settings, F4 - move all windows to the mouse point
-Escape - quit, TAB - Show/Hide all windows
-Space - abort re-creation and save midi file to disk''')
+helpWindow_label1 = GLLabel(0, 0, help_label)
 
 # Settings
-settingsWindow.appendChild(GLButton(260, 20, 140, 20, 0, [128, 128, 128], 'start recreate midi', start_recreate_midi, hint='q - hot key'))
-settingsWindow.appendChild(GLButton(260, 40, 140, 20, 0, [128, 128, 128], 'set start frame', set_start_frame_to_current_frame, hint='s - hot key, (mods : shift + s, set processing start frame to the beginning)'))
-settingsWindow.appendChild(GLButton(260 + 141, 40, 140, 20, 0, [128, 128, 128], 'set end frame', sef_end_frame_to_current_frame, hint='e - hot key, (mods : shift + e, set processing end frame to the ending)'))
+settingsWindow.appendChild(GLButton(260, 20, 140, 20, 0, [128, 128, 128], start_recreate_midi_label, start_recreate_midi, hint=hint_start_recreate_midi))
+settingsWindow.appendChild(GLButton(260, 40, 140, 20, 0, [128, 128, 128], set_start_frame_label, set_start_frame_to_current_frame, hint=hint_set_start_frame))
+settingsWindow.appendChild(GLButton(260 + 141, 40, 140, 20, 0, [128, 128, 128], set_end_frame_label, sef_end_frame_to_current_frame, hint=hint_set_end_frame))
 
-notes_overlap_btn = GLButton(260, 80, 140, 20, 0, [128, 128, 128], 'notes overlap', switch_notes_overlap, hint='o - hot key', switch=1, switch_status=0)
-ignore_notes_with_minimal_duration_btn = GLButton(260, 100, 272, 20, 0, [128, 128, 128], 'ignore notes with minimal duration', switch_ignore_notes_with_minimal_duration, hint='i - hot key', switch=1, switch_status=0)
+notes_overlap_btn = GLButton(260, 80, 140, 20, 0, [128, 128, 128], notes_overlap_label, switch_notes_overlap, hint=hint_notes_overlap, switch=1, switch_status=0)
+ignore_notes_with_minimal_duration_btn = GLButton(260, 100, 272, 20, 0, [128, 128, 128], ignore_notes_with_minimal_duration_label, switch_ignore_notes_with_minimal_duration, hint=hint_ignore_notes_with_minimal_duration, switch=1, switch_status=0)
 settingsWindow.appendChild(notes_overlap_btn)
 settingsWindow.appendChild(ignore_notes_with_minimal_duration_btn)
 
-settingsWindow.appendChild(GLButton(260 + 141, 80, 140, 20, 0, [128, 128, 128], 'sync notes', switch_sync_notes_start_pos, hint='sync notes start pos', switch=1, switch_status=0))
-settingsWindow.appendChild(GLButton(260, 120, 140, 20, 0, [128, 128, 128], 'resize window', switch_resize_windows, hint='r - hot key'))
+settingsWindow.appendChild(GLButton(260 + 141, 80, 140, 20, 0, [128, 128, 128], sync_notes_label, switch_sync_notes_start_pos, hint=hint_sync_notes, switch=1, switch_status=0))
+settingsWindow.appendChild(GLButton(260, 120, 140, 20, 0, [128, 128, 128], resize_window_label, switch_resize_windows, hint=hint_resize_window))
 
-exit_switch = GLButton(260 + 141, 120, 140, 20, 1, [128, 128, 128], 'auto-close', change_autoclose, switch=1, switch_status=prefs.autoclose, hint='exit after the completion of the midi reconstruction')
+exit_switch = GLButton(260 + 141, 120, 140, 20, 1, [128, 128, 128], auto_close_label, change_autoclose, switch=1, switch_status=prefs.autoclose, hint=hint_exit_switch)
 settingsWindow.appendChild(exit_switch)
 
-settingsWindow.appendChild(GLButton(260, 140, 140, 20, 0, [128, 128, 128], 'save settings', btndown_save_settings, hint='F2 - hot key, save current settings'))
-settingsWindow.appendChild(GLButton(260 + 141, 140, 140, 20, 0, [128, 128, 128], 'load settings', btndown_load_settings, hint='F3 - hot key, load saved settings'))
+settingsWindow.appendChild(GLButton(260, 140, 140, 20, 0, [128, 128, 128], save_settings_label, btndown_save_settings, hint=hint_save_settings))
+settingsWindow.appendChild(GLButton(260 + 141, 140, 140, 20, 0, [128, 128, 128], load_settings_label, btndown_load_settings, hint=hint_load_settings))
 
-navbtns_info = [{'name': '[<', 'hint': 'Home - hot key, go to first frame', 'func': scroll_to_start},
-                {'name': '<<', 'hint': 'PageDown - hot key, fast scroll backward', 'func': scroll_fast_prev},
-                {'name': ' <', 'hint': 'Shift+PageDown - shortcut, scroll backward by frame', 'func': scroll_prev_by_frame},
-                {'name': ' >', 'hint': 'Shift+PageUp - shortcut, scroll forward by frame', 'func': scroll_forward_by_frame},
-                {'name': '>>', 'hint': 'PageUp - hot key,fast scroll forward', 'func': scroll_fast_forward},
-                {'name': '  >]', 'hint': 'End - hot key, go to last frame', 'func': scroll_to_end},
-                {'name': 'R+', 'hint': 'rotate the keys clockwise, hot key +', 'func': rotate_cw},
-                {'name': 'R-', 'hint': 'rotate the keys counterclockwise, hot key -', 'func': rotate_ccw}]
+navbtns_info = [{'name': '[<', 'hint': hint_home, 'func': scroll_to_start},
+                {'name': '<<', 'hint': hint_page_down, 'func': scroll_fast_prev},
+                {'name': ' <', 'hint': hint_shift_page_down, 'func': scroll_prev_by_frame},
+                {'name': ' >', 'hint': hint_shift_page_up, 'func': scroll_forward_by_frame},
+                {'name': '>>', 'hint': hint_page_up, 'func': scroll_fast_forward},
+                {'name': '  >]', 'hint': hint_end, 'func': scroll_to_end},
+                {'name': 'R+', 'hint': hint_rotate_cw, 'func': rotate_cw},
+                {'name': 'R-', 'hint': hint_rotate_ccw, 'func': rotate_ccw}]
 for i in range(len(navbtns_info)):
     settingsWindow.appendChild(GLButton(260 + i * 32, 230, 32, 20, 0, [128, 128, 128], navbtns_info[i]['name'], navbtns_info[i]['func'], hint=navbtns_info[i]['hint']))
 
 helpWindow.appendChild(helpWindow_label1)
 
-settingsWindow_label1 = GLLabel(1, 0, 'base octave: ' + str(prefs.octave))
+settingsWindow_label1 = GLLabel(1, 0, base_octave_label + str(prefs.octave))
 settingsWindow.appendChild(settingsWindow_label1)
 
-settingsWindow.appendChild(GLButton(130, 0, 20, 20, 1, [128, 128, 128], '+', raise_octave, hint='] - hot key, move up base octave (+12 tones)'))
-settingsWindow.appendChild(GLButton(150, 0, 20, 20, 1, [128, 128, 128], ' -', lower_octave, hint='[ - hot key, move down base octave (-12 tones)'))
+settingsWindow.appendChild(GLButton(130, 0, 20, 20, 1, [128, 128, 128], '+', raise_octave, hint=raise_octave_hint))
+settingsWindow.appendChild(GLButton(150, 0, 20, 20, 1, [128, 128, 128], ' -', lower_octave, hint=lower_octave_hint))
 
-settingsWindow_slider1 = GLSlider(1, 40, 240, 18, 0, 130, prefs.keyp_delta, label='Sensitivity')
+settingsWindow_slider1 = GLSlider(1, 40, 240, 18, 0, 130, prefs.keyp_delta, label=sensitivity_label)
 settingsWindow_slider1.round = 1
 settingsWindow.appendChild(settingsWindow_slider1)
 
-settingsWindow_slider2 = GLSlider(1, 90, 240, 18, 0, 200, prefs.minimal_duration * 100, label='Minimal note duration (sec)')
+settingsWindow_slider2 = GLSlider(1, 90, 240, 18, 0, 200, prefs.minimal_duration * 100, label=minimal_note_duration_label)
 settingsWindow_slider2.round = 0
 settingsWindow.appendChild(settingsWindow_slider2)
 
-settingsWindow_slider3 = GLSlider(1, 133, 240, 18, 30, 240, prefs.tempo, label='Output tempo for midi')
+settingsWindow_slider3 = GLSlider(1, 133, 240, 18, 30, 240, prefs.tempo, label=output_tempo_for_midi_label)
 settingsWindow_slider3.round = 0
 settingsWindow.appendChild(settingsWindow_slider3)
 
-settingsWindow_slider4 = GLSlider(1, 175, 240, 18, 0, 2, midi_file_format, label='Output midi format')
+settingsWindow_slider4 = GLSlider(1, 175, 240, 18, 0, 2, midi_file_format, label=output_midi_format_label)
 settingsWindow_slider4.round = 0
 settingsWindow.appendChild(settingsWindow_slider4)
 
-settingsWindow_slider5 = GLSlider(1, 215, 240, 18, 0, 1000, prefs.blackkey_relative_position * 1000, update_blackkey_relative_position, label='black key relative pos')
+settingsWindow_slider5 = GLSlider(1, 215, 240, 18, 0, 1000, prefs.blackkey_relative_position * 1000, update_blackkey_relative_position, label=black_key_relative_pos_label)
 settingsWindow_slider5.round = 0
 settingsWindow.appendChild(settingsWindow_slider5)
 
-settingsWindow_slider6 = GLSlider(1, 255, 240, 18, 0, 1000, prefs.sync_notes_start_pos_time_delta, update_sync_notes_start_pos_time_delta, label='sync notes time delta (ms)')
+settingsWindow_slider6 = GLSlider(1, 255, 240, 18, 0, 1000, prefs.sync_notes_start_pos_time_delta, update_sync_notes_start_pos_time_delta, label=sync_notes_time_delta_label)
 settingsWindow_slider6.round = 0
 settingsWindow.appendChild(settingsWindow_slider6)
 
-settingsWindow_rollcheck_button = GLButton(260, 160, 140, 22, 1, [128, 128, 128], 'roll check', change_rollcheck,switch=1, switch_status=prefs.rollcheck)
+settingsWindow_rollcheck_button = GLButton(260, 160, 140, 22, 1, [128, 128, 128], roll_check_label, change_rollcheck,switch=1, switch_status=prefs.rollcheck)
 settingsWindow.appendChild(settingsWindow_rollcheck_button)
 
-settingsWindow.appendChild(GLButton(260 + 141, 160, 140, 20, 1, [128, 128, 128], 'per channel save', change_save_to_disk_per_channel, switch=1, switch_status=prefs.save_to_disk_per_channel, hint='split the output midi per channels'))
+settingsWindow.appendChild(GLButton(260 + 141, 160, 140, 20, 1, [128, 128, 128], per_channel_save_label, change_save_to_disk_per_channel, switch=1, switch_status=prefs.save_to_disk_per_channel, hint=per_channel_save_hint))
 
-settingsWindow_rollcheck_priority_button = GLButton(260, 180, 222, 22, 1, [128, 128, 128], 'rollcheck white keys priority', change_rollcheck_priority, switch=1, switch_status=prefs.rollcheck_priority)
+settingsWindow_rollcheck_priority_button = GLButton(260, 180, 222, 22, 1, [128, 128, 128], rollcheck_white_keys_priority_label, change_rollcheck_priority, switch=1, switch_status=prefs.rollcheck_priority)
 settingsWindow.appendChild(settingsWindow_rollcheck_priority_button)
 
 # color map
 print('creating new colors ' + str(len(prefs.keyp_colors)))
 
-sparks_slider_delta = GLSlider(6, 25, 150, 18, -50, 150, 50, update_sparks_delta, label='Sparks delta')
+sparks_slider_delta = GLSlider(6, 25, 150, 18, -50, 150, 50, update_sparks_delta, label=sparks_delta_label)
 for i in range(len(prefs.keyp_colors)):
     cx, cy = (i % 2) * 130, (i // 2) * 20
     offsetx, offsety = 4, 4
@@ -769,51 +750,50 @@ for i in range(len(prefs.keyp_colors)):
     #
     colorWindow_colorBtns_channel_btns.append( GLButton(offsetx + cx + 70, offsety + cy, 20, 20, (i + 1), [128, 128, 128], '+', update_channels))
     colorWindow_colorBtns_channel_btns.append( GLButton(offsetx + cx + 70 + 20, offsety + cy, 20, 20, -(i + 1), [128, 128, 128], '-', update_channels))
-    colorWindow_colorBtns_channel_btns.append( GLButton(offsetx + cx + 70 + 40, offsety + cy, 20, 20, i, [128, 128, 128], 'x', disable_color, hint='ctrl+0 - shortcut, disable selected color'))
+    colorWindow_colorBtns_channel_btns.append( GLButton(offsetx + cx + 70 + 40, offsety + cy, 20, 20, i, [128, 128, 128], 'x', disable_color, hint=disable_color_hint))
 for i in colorWindow_colorBtns_channel_btns:
     colorWindow.appendChild(i)
 
 # extra/experimental
-extraWindow.appendChild(GLButton(5, 20, 128, 25, 1, [128, 128, 128], 'read colors', readcolors))
-extraWindow.appendChild(GLButton(135, 20, 128, 25, 1, [128, 128, 128], 'update color', updatecolor))
-extraWindow.appendChild(GLButton(265, 20, 138, 25, 1, [128, 128, 128], 'enable/disable', change_use_alternate_keys))
-extraWindow.appendChild(GLButton(265, 45, 155, 22, 1, [96, 96, 128], 'snap notes to grid', snap_notes_to_the_grid, switch=1, switch_status=use_snap_notes_to_grid))
+extraWindow.appendChild(GLButton(5, 20, 128, 25, 1, [128, 128, 128], read_colors_label, readcolors))
+extraWindow.appendChild(GLButton(135, 20, 128, 25, 1, [128, 128, 128], update_color_label, updatecolor))
+extraWindow.appendChild(GLButton(265, 20, 138, 25, 1, [128, 128, 128], enable_disable_label, change_use_alternate_keys))
+extraWindow.appendChild(GLButton(265, 45, 155, 22, 1, [96, 96, 128], snap_notes_to_grid_label, snap_notes_to_the_grid, switch=1, switch_status=use_snap_notes_to_grid))
 
-extra_label1 = GLLabel(6, 0, 'Use alternate:' + str(prefs.use_alternate_keys))
+extra_label1 = GLLabel(6, 0, use_alternate_label + str(prefs.use_alternate_keys))
 extraWindow.appendChild(extra_label1)
-extra_slider1 = GLSlider(6, 65, 240, 18, -100, 100, 0, update_alternate_sensitivity, label='Selected key sensitivity')
+extra_slider1 = GLSlider(6, 65, 240, 18, -100, 100, 0, update_alternate_sensitivity, label=selected_key_sensitivity_label)
 
 extraWindow.appendChild(extra_slider1)
 
-extra_label3 = GLLabel(6, 90, '''to select the key press ctrl + left mouse button on the key rect.
-to deselect the key press ctrl + left mouse button on empty space.''')
+extra_label3 = GLLabel(6, 90, select_deselect_key_label)
 extraWindow.appendChild(extra_label3)
 
-extraWindow_slider2 = GLSlider(5, 155, 240, 18, 0, 2000, line_height, update_line_height, label='length of vertical key lines')
+extraWindow_slider2 = GLSlider(5, 155, 240, 18, 0, 2000, line_height, update_line_height, label=line_height_label)
 extraWindow_slider2.round = 0
 extraWindow.appendChild(extraWindow_slider2)
 
-# 'sparks & color settings
+# sparks & color settings
 # スパークの高さに関するスライダーの設定
-sparks_slider_height = GLSlider(160, 25, 150, 18, 1, 60, 1, None, label='Sparks height')
+sparks_slider_height = GLSlider(160, 25, 150, 18, 1, 60, 1, None, label=sparks_height_label)
 sparks_slider_height.round = 0
 # スパークの使用に関するスイッチボタンの設定
-sparks_switch = GLButton(313, 24, 100, 22, 1, [128, 128, 128], 'use sparks', change_use_sparks, switch=1, switch_status=prefs.use_sparks)
+sparks_switch = GLButton(313, 24, 100, 22, 1, [128, 128, 128], use_sparks_label, change_use_sparks, switch=1, switch_status=prefs.use_sparks)
 # スパーク関連のUI要素をウィンドウに追加
 sparksWindow.appendChild(sparks_slider_delta)
 sparksWindow.appendChild(sparks_slider_height)
 sparksWindow.appendChild(sparks_switch)
 #
-sparksWindow.appendChild(GLButton(413, 24, 32, 22, 1, [96, 96, 128], 'y+', update_sparks_y_pos, hint='move sparks higher'))
-sparksWindow.appendChild(GLButton(413 + 33, 24, 32, 22, 1, [96, 96, 128], 'y-', update_sparks_y_pos, hint='move sparks lower'))
+sparksWindow.appendChild(GLButton(413, 24, 32, 22, 1, [96, 96, 128], 'y+', update_sparks_y_pos, hint=move_sparks_higher_hint))
+sparksWindow.appendChild(GLButton(413 + 33, 24, 32, 22, 1, [96, 96, 128], 'y-', update_sparks_y_pos, hint=move_sparks_lower_hint))
 # スパークの位置調整に関するラベル
-sparksWindow.appendChild(GLLabel(6, 50, 'alt + up / down - move sparks label up or down '))
+sparksWindow.appendChild(GLLabel(6, 50, move_sparks_label))
 
 # 特定色の感度に関するスライダーの設定
-selected_color_delta = GLSlider(6, 100, 200, 18, 0, 130, 50, update_percolor_delta, label='percolor sensitivity')
+selected_color_delta = GLSlider(6, 100, 200, 18, 0, 130, 50, update_percolor_delta, label=percolor_sensitivity_label)
 selected_color_delta.round = 1
 # 特定色の感度使用に関するスイッチボタンの設定
-use_percolor_delta = GLButton(313, 100, 190, 22, 1, [128, 128, 128], 'use percolor sensitivity', change_use_percolor_delta, switch=1, switch_status=prefs.use_sparks)
+use_percolor_delta = GLButton(313, 100, 190, 22, 1, [128, 128, 128], use_percolor_sensitivity_label, change_use_percolor_delta, switch=1, switch_status=prefs.use_sparks)
 # 特定色の感度関連のUI要素をウィンドウに追加
 sparksWindow.appendChild(selected_color_delta)
 sparksWindow.appendChild(use_percolor_delta)
@@ -1018,7 +998,7 @@ def drawframe():
     prefs.minimal_duration = settingsWindow_slider2.value * 0.01
     prefs.tempo = int(settingsWindow_slider3.value)
 
-    settingsWindow_label1.text = 'base octave: ' + str(prefs.octave)
+    settingsWindow_label1.text = base_octave_label + str(prefs.octave)
     for i in range(len(prefs.keyp_colors)):
         colorBtns[i].color = prefs.keyp_colors[i]
 

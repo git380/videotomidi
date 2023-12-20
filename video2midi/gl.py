@@ -228,13 +228,14 @@ def GenFontTexture():
 
     # フォントの選択
     if sys.platform.startswith('win'):
-        font = pygame.font.SysFont('Arial', fontSize - 10)
+        font = pygame.font.SysFont('MS Gothic', fontSize - 10)
     else:
         font = pygame.font.Font(None, fontSize)
 
     x, y = 2, 0  # 初期の水平位置と垂直位置
-    # ASCII文字コード(Unicode)の範囲
-    for char_code in range(32, 126 + 1):
+
+    def add_char_to_texture(char_code):
+        nonlocal x, y
         # 文字コードを文字に変換
         char = chr(char_code)
         # テキストサーフェイスの作成
@@ -252,6 +253,18 @@ def GenFontTexture():
         if x + ix > 512:  # サーフェイスの幅を超えた場合
             x = 2  # 水平位置をリセット
             y += 1  # 垂直位置を1行分下げる
+
+    # ASCII文字コード(Unicode)の範囲
+    for char_code in range(32, 126 + 1):
+        add_char_to_texture(char_code)
+
+    # ひらがなの追加
+    for char_code in range(0x3040, 0x309F + 1):
+        add_char_to_texture(char_code)
+
+    # カタカナの追加
+    for char_code in range(0x30A0, 0x30FF + 1):
+        add_char_to_texture(char_code)
 
     tex_data = pygame.image.tostring(texture_buffer_surf, 'RGBA', 1)
 

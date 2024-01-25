@@ -822,7 +822,7 @@ def iswhitekey(key_num):
         return 0
 
 
-def drawframe():
+def drawframe(lastimage = None):
     global pyfont
     global helptext
     global mousex, mousey
@@ -870,7 +870,11 @@ def drawframe():
         if (pixpos[0] == -1) and (pixpos[1] == -1):
             continue
 
-        keybgr = image[pixpos[1], pixpos[0]]
+        if lastimage is not None:
+            keybgr = lastimage[pixpos[1], pixpos[0]]
+        else:
+            keybgr = image[pixpos[1], pixpos[0]]
+
         key = [keybgr[2], keybgr[1], keybgr[0]]
 
         keybgr = [0, 0, 0]
@@ -968,6 +972,9 @@ def drawframe():
         if separate_note_id == i:
             glColor4f(0, 1, 0, 1)
             DrawRect(-7, -12, 7, 12, 2)
+        if prefs.octave * 12 == i:
+            glColor4f(1, 0, 0, 1)
+            DrawRect(-9, 9, 9, 12, 3)
 
         DrawQuad(-1, -1, 1, 1)
         glPopMatrix()
@@ -1046,16 +1053,18 @@ def processmidi():
     print('starting from frame:' + str(prefs.startframe))
     getFrame(prefs.startframe)
     notecnt = 0
+    lastimage = image
     # フレームごとに画像を取得し、鍵盤の位置から指定した色をチェックする
     # 色が見つかった場所をMIDIノートとして記録していく
     while success:
         # 現在のフレーム位置を表示
         if frame % 10 == 0:
+            glBindTexture(GL_TEXTURE_2D, Gl.bgImgGL)
             if frame % 200 == 0:
-                glBindTexture(GL_TEXTURE_2D, Gl.bgImgGL)
                 loadImage(frame)
+                lastimage = image
                 glEnable(GL_TEXTURE_2D)
-                drawframe()
+                drawframe(lastimage)
 
             glColor4f(1.0, 0.5, 1.0, 0.5)
             glDisable(GL_TEXTURE_2D)
@@ -1123,7 +1132,7 @@ def processmidi():
                             if prefs.use_sparks:
                                 has_spark_delta = ((sparkkey[0] - prefs.keyp_colors[j][0]) > prefs.keyp_colors_sparks_sensitivity[j]) or ((sparkkey[1] - prefs.keyp_colors[j][1]) > prefs.keyp_colors_sparks_sensitivity[j]) or ((sparkkey[2] - prefs.keyp_colors[j][2]) > prefs.keyp_colors_sparks_sensitivity[j])
                                 if not has_spark_delta:
-                                    keypressed = 2
+                                    keypressed = 0
 
             #
             if keypressed != 0:
